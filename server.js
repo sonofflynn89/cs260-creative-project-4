@@ -1,0 +1,60 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(express.static('dist'))
+
+
+let team = [
+    {id:1, name:"Nikolai Belinski", weapon:"AK-47",
+     imageUrl:"https://vignette.wikia.nocookie.net/callofduty/images/a/ae/Nikolai_DE_BO3.jpg/revision/latest?cb=20160411062825", rating:8},
+    {id:2, name:"Edward Richtofen", weapon:"MP-40",
+     imageUrl:"https://vignette.wikia.nocookie.net/callofduty/images/d/d2/WWII_Richtofen_Laughing_Closeup_BO3.png/revision/latest?cb=20160925151050", rating:6},
+    {id:3, name:"Tank Dempsey", weapon:"Thompson",
+     imageUrl:"https://vignette.wikia.nocookie.net/callofduty/images/8/8c/Original_Tank_Dempsey_BOIII.png/revision/latest?cb=20160826070600", rating:10},
+    {id:4, name:"Takeo Masaki", weapon:"Arisaka Type-30",
+     imageUrl:"https://vignette.wikia.nocookie.net/callofduty/images/2/2a/Takeo_Portrait_BOIII.png/revision/latest?cb=20171229222013", rating:7},
+
+
+];
+
+let id = 4;
+
+app.get('/api/team', (req, res) => {
+  res.send(team);
+});
+
+app.post('/api/team', (req, res) => {
+  id = id + 1;
+    let member= {id:id, name:req.body.name, weapon:req.body.weapon,
+		 rating:req.body.rating, imageUrl:req.body.imageUrl};
+  team.push(member);
+  res.send(team);
+});
+
+app.delete('/api/team/:id', (req, res) => {
+    let id = parseInt(req.params.id);
+    let removeIndex = team.map(member => { return member.id; }).indexOf(id);
+    console.log(removeIndex);
+  if (removeIndex === -1) {
+    res.status(404).send("Sorry, that item doesn't exist");
+    return;
+  }
+  team.splice(removeIndex, 1);
+  res.sendStatus(200);
+});
+
+app.put('/api/team/:id', (req, res) => {
+    let id = parseInt(req.params.id);
+  let memberMap = team.map(member => { return member.id; });
+    let index = memberMap.indexOf(id);
+  let member = team[index];
+    member.rating = req.body.rating;
+  res.send(member);
+});
+
+
+app.listen(3000, () => console.log('Server listening on port 3000!'))
