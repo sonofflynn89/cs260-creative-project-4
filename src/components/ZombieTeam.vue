@@ -34,6 +34,8 @@
 </table>
 
 <h2 v-if="numMembers >= 4">TEAM FULL</h2>
+<a href="https://github.com/sonofflynn89/cs260-creative-project-4"> Repository</a>
+
 </div>
 
   
